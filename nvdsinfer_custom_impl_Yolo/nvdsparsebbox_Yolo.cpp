@@ -55,6 +55,8 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   b.top = y1;
   b.height = clamp(y2 - y1, 0, netH);
 
+  std::cout << "DEBUG: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
+
   return b;
 }
 
@@ -65,6 +67,7 @@ addBBoxProposal(const float bx1, const float by1, const float bx2, const float b
   NvDsInferParseObjectInfo bbi = convertBBox(bx1, by1, bx2, by2, netW, netH);
 
   if (bbi.width < 1 || bbi.height < 1) {
+      // std::cout << "DEBUG: SKIPPED: bbi.width,bbi.height " << bbi.width << " , " << bbi.height << std::endl;
       return;
   }
 
@@ -136,6 +139,7 @@ NvDsInferParseCustomYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo
     std::cerr << "ERROR: Could not find output layer in bbox parsing" << std::endl;
     return false;
   }
+  // std::cout << "DEBUG: ---------------NEW " << std::endl;
 
   std::vector<NvDsInferParseObjectInfo> objects;
 
