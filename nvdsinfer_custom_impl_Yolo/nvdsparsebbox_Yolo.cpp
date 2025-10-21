@@ -50,12 +50,22 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   x2 = clamp(x2, 0, netW);
   y2 = clamp(y2, 0, netH);
 
-  b.left = clamp(x1, 10, netW-10);
-  b.width = clamp(x2 - x1, 10, netW-10);
-  b.top = clamp(y1, 10, netH - 10);
-  b.height = clamp(y2 - y1, 10, netH-10);
+  // b.left = clamp(x1, 10, netW-10);
+  // b.width = clamp(x2 - x1, 10, netW-10);
+  // b.top = clamp(y1, 10, netH - 10);
+  // b.height = clamp(y2 - y1, 10, netH-10);
+  b.left = x1;
+  b.width = clamp(x2 - x1, 0, netW);
+  b.top = y1;
+  b.height = clamp(y2 - y1, 0, netH);
 
-  std::cout << "DEBUG: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
+
+  // if (b.left <= 0 || b.top <= 0) {
+  //   std::cout << "NEGATIVE: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
+  // }
+  if (b.width + b.left >= 640 || b.height + b.top >= 640) {
+    std::cout << "OUTSIDE: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
+  }
 
   return b;
 }
