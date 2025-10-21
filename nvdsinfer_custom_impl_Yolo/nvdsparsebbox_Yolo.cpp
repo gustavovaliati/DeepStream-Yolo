@@ -63,7 +63,7 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   // if (b.left <= 0 || b.top <= 0) {
   //   std::cout << "NEGATIVE: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
   // }
-  if (b.width + b.left >= 640 || b.height + b.top >= 640) {
+  if (b.width + b.left > 640 || b.height + b.top > 640) {
     std::cout << "OUTSIDE: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
   }
 
