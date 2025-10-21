@@ -59,6 +59,7 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   b.top = y1;
   b.height = clamp(y2 - y1, 0, netH - y1 - 1);
 
+  std::cout << "NEGATIVE: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
 
   // if (b.left <= 0 || b.top <= 0) {
   //   std::cout << "NEGATIVE: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
