@@ -45,15 +45,15 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   float x2 = bx2;
   float y2 = by2;
 
-  x1 = clamp(x1, 0, netW);
-  y1 = clamp(y1, 0, netH);
-  x2 = clamp(x2, 0, netW);
-  y2 = clamp(y2, 0, netH);
+  x1 = clamp(x1, 0, netW-1);
+  y1 = clamp(y1, 0, netH-1);
+  x2 = clamp(x2, 0, netW-1);
+  y2 = clamp(y2, 0, netH-1);
 
   b.left = x1;
-  b.width = clamp(x2 - x1, 0, netW);
+  b.width = clamp(x2 - x1, 0, netW-1);
   b.top = y1;
-  b.height = clamp(y2 - y1, 0, netH);
+  b.height = clamp(y2 - y1, 0, netH-1);
 
   std::cout << "DEBUG: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
 
