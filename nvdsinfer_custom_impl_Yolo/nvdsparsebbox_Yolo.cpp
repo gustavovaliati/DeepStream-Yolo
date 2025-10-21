@@ -45,14 +45,14 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   float x2 = bx2;
   float y2 = by2;
 
-  x1 = clamp(x1, 10, netW-10);
-  y1 = clamp(y1, 10, netH-10);
-  x2 = clamp(x2, 10, netW-10);
-  y2 = clamp(y2, 10, netH-10);
+  x1 = clamp(x1, 0, netW);
+  y1 = clamp(y1, 0, netH);
+  x2 = clamp(x2, 0, netW);
+  y2 = clamp(y2, 0, netH);
 
-  b.left = x1;
+  b.left = clamp(x1, 10, netW-10);
   b.width = clamp(x2 - x1, 10, netW-10);
-  b.top = y1;
+  b.top = clamp(y1, 10, netH - 10);
   b.height = clamp(y2 - y1, 10, netH-10);
 
   std::cout << "DEBUG: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
@@ -100,10 +100,10 @@ decodeTensorYolo(const float* boxes, const float* scores, const float* classes, 
     float bx2 = bx1 + bw;
     float by2 = by1 + bh;
 
-    bx1 = 10.0;
-    bx2 = 100.0;
-    by1 = 20.0;
-    by2 = 200.0;
+    // bx1 = 10.0;
+    // bx2 = 100.0;
+    // by1 = 20.0;
+    // by2 = 200.0;
     addBBoxProposal(bx1, by1, bx2, by2, netW, netH, maxIndex, maxProb, binfo);
   }
 
