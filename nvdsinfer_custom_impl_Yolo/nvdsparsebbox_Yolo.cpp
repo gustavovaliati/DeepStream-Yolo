@@ -27,6 +27,8 @@
 
 #include "utils.h"
 
+const uint MAX_H = 360;
+
 extern "C" bool
 NvDsInferParseYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDsInferNetworkInfo const& networkInfo,
     NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList);
@@ -46,14 +48,15 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   float y2 = by2;
 
   x1 = clamp(x1, 0, netW);
-  y1 = clamp(y1, 0, netH);
+  y1 = clamp(y1, 0, MAX_H);
   x2 = clamp(x2, 0, netW);
-  y2 = clamp(y2, 0, netH);
+  y2 = clamp(y2, 0, MAX_H);
 
   b.left = x1;
   b.width = clamp(x2 - x1, 0, netW);
   b.top = y1;
-  b.height = clamp(y2 - y1, 0, netH - b.top);
+  b.height = clamp(y2 - y1, 0, MAX_H);
+  // b.height = clamp(y2 - y1, 0, MAX_H - b.top);
 
   // std::cout << "here: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
 
