@@ -50,23 +50,19 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   x2 = clamp(x2, 0, netW);
   y2 = clamp(y2, 0, netH);
 
-  // b.left = clamp(x1, 10, netW-10);
-  // b.width = clamp(x2 - x1, 10, netW-10);
-  // b.top = clamp(y1, 10, netH - 10);
-  // b.height = clamp(y2 - y1, 10, netH-10);
-  b.left = x1 + 1;
-  b.width = clamp(x2 - x1, 0, netW - x1 - 1) - 1;
-  b.top = y1 + 1;
-  b.height = clamp(y2 - y1, 0, netH - y1 - 1) - 1;
+  b.left = x1;
+  b.width = clamp(x2 - x1, 0, netW);
+  b.top = y1;
+  b.height = clamp(y2 - y1, 0, netH);
 
-  std::cout << "here: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
+  // std::cout << "here: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
 
   // if (b.left <= 0 || b.top <= 0) {
   //   std::cout << "NEGATIVE: convertBBox " << bx1 << "->" << x1 << ";" << by1 << "->" << y1 << ";" << bx2 << "->" << x2 << ";" << by2 << "->" << y2 << ";"  << "w/h " << b.width << "," << b.height << std::endl;
   // }
-  if (b.width + b.left > 640 || b.height + b.top > 640) {
-    std::cout << "OUTSIDE: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
-  }
+  // if (b.width + b.left > 640 || b.height + b.top > 640) {
+  //   std::cout << "OUTSIDE: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
+  // }
 
   return b;
 }
@@ -78,13 +74,13 @@ addBBoxProposal(const float bx1, const float by1, const float bx2, const float b
   NvDsInferParseObjectInfo bbi = convertBBox(bx1, by1, bx2, by2, netW, netH);
 
   if (bbi.width < 1 || bbi.height < 1) {
-      std::cout << "DEBUG: SKIPPED: bbi.width,bbi.height " << bbi.width << " , " << bbi.height << std::endl;
+      // std::cout << "DEBUG: SKIPPED: bbi.width,bbi.height " << bbi.width << " , " << bbi.height << std::endl;
       return;
   }
 
   bbi.detectionConfidence = maxProb;
   bbi.classId = maxIndex;
-  std::cout << "FINAL VALUE: left: " << bbi.left << ", top: " << bbi.top << ", w: " << bbi.width << ", h: " << bbi.height << ", conf: " << bbi.detectionConfidence << ", class: " << bbi.classId << std::endl;
+  // std::cout << "FINAL VALUE: left: " << bbi.left << ", top: " << bbi.top << ", w: " << bbi.width << ", h: " << bbi.height << ", conf: " << bbi.detectionConfidence << ", class: " << bbi.classId << std::endl;
 
   binfo.push_back(bbi);
 }
@@ -100,7 +96,7 @@ decodeTensorYolo(const float* boxes, const float* scores, const float* classes, 
     int maxIndex = (int) classes[b];
 
     if (maxProb < preclusterThreshold[maxIndex]) {
-      std::cout << "DEBUG: SKIPPED: low prob " << maxProb << " , " << preclusterThreshold[maxIndex] << std::endl;
+      // std::cout << "DEBUG: SKIPPED: low prob " << maxProb << " , " << preclusterThreshold[maxIndex] << std::endl;
       continue;
     }
 
@@ -178,6 +174,18 @@ NvDsInferParseCustomYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo
   objects.insert(objects.end(), outObjs.begin(), outObjs.end());
 
   objectList = objects;
+
+  for (int i=0;i<objects.size();i++) {
+  //   b.left = x1 + 1;
+  // b.width = clamp(x2 - x1, 0, netW - x1 - 1) - 1;
+  // b.top = y1 + 1;
+  // b.height = clamp(y2 - y1, 0, netH - y1 - 1) - 1;
+
+  // bbi.detectionConfidence = maxProb;
+  // bbi.classId = maxIndex;
+    NvDsInferParseObjectInfo b = objects[i];
+    std::cout << "FINAL VALUE" << i << "/" << objects.size() << " - left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << ", conf: " << b.detectionConfidence << ", class: " << b.classId << std::endl;    
+  }
 
   return true;
 }
