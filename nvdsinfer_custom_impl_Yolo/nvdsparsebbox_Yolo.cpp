@@ -115,6 +115,9 @@ decodeTensorYolo(const float* boxes, const float* scores, const float* classes, 
     // by1 = 20.0;
     // by2 = 200.0;
     addBBoxProposal(bx1, by1, bx2, by2, netW, netH, maxIndex, maxProb, binfo);
+    if (b == outputSize - 1) {
+      addBBoxProposal(bx1, by1, bx2, by2, netW, netH, maxIndex, maxProb, binfo);
+    }
   }
 
   // for (uint b = 0; b < outputSize; ++b) {
