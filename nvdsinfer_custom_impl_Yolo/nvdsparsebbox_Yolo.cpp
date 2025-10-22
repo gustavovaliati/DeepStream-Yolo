@@ -53,7 +53,7 @@ convertBBox(const float& bx1, const float& by1, const float& bx2, const float& b
   b.left = x1;
   b.width = clamp(x2 - x1, 0, netW);
   b.top = y1;
-  b.height = clamp(y2 - y1, 0, netH) - 5;
+  b.height = clamp(y2 - y1, 0, netH - b.top);
 
   // std::cout << "here: bx1: " << bx1 << ", by1: " << by1 << ", bx2: " << bx2 << ", by2: " << by2 << ", left: " << b.left << ", top: " << b.top << ", w: " << b.width << ", h: " << b.height << std::endl;
 
