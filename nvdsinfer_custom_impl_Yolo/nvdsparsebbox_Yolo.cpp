@@ -27,6 +27,9 @@
 
 #include "utils.h"
 
+// max height for a yolo model with input 640x640 and images with 1920x1080
+const uint MAX_H_360 = 360;
+
 extern "C" bool
 NvDsInferParseYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDsInferNetworkInfo const& networkInfo,
     NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList);
@@ -119,6 +122,31 @@ NvDsInferParseCustomYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo
   return true;
 }
 
+static bool
+NvDsInferParseCustomYolo360p(std::vector<NvDsInferLayerInfo> const& outputLayersInfo,
+    NvDsInferNetworkInfo const& networkInfo, NvDsInferParseDetectionParams const& detectionParams,
+    std::vector<NvDsInferParseObjectInfo>& objectList)
+{
+  if (outputLayersInfo.empty()) {
+    std::cerr << "ERROR: Could not find output layer in bbox parsing" << std::endl;
+    return false;
+  }
+
+  std::vector<NvDsInferParseObjectInfo> objects;
+
+  const NvDsInferLayerInfo& output = outputLayersInfo[0];
+  const uint outputSize = output.inferDims.d[0];
+
+  std::vector<NvDsInferParseObjectInfo> outObjs = decodeTensorYolo((const float*) (output.buffer), outputSize,
+      networkInfo.width, MAX_H_360, detectionParams.perClassPreclusterThreshold);
+
+  objects.insert(objects.end(), outObjs.begin(), outObjs.end());
+
+  objectList = objects;
+
+  return true;
+}
+
 extern "C" bool
 NvDsInferParseYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDsInferNetworkInfo const& networkInfo,
     NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList)
@@ -126,4 +154,12 @@ NvDsInferParseYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDs
   return NvDsInferParseCustomYolo(outputLayersInfo, networkInfo, detectionParams, objectList);
 }
 
+extern "C" bool
+NvDsInferParseYolo360p(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDsInferNetworkInfo const& networkInfo,
+    NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList)
+{
+  return NvDsInferParseCustomYolo360p(outputLayersInfo, networkInfo, detectionParams, objectList);
+}
+
 CHECK_CUSTOM_PARSE_FUNC_PROTOTYPE(NvDsInferParseYolo);
+CHECK_CUSTOM_PARSE_FUNC_PROTOTYPE(NvDsInferParseYolo360p);
